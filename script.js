@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const thinkingMessage = addMessage("Thinking...", 'bot');
 
         // Call the backend server
-        fetch('https://your-backend-url.herokuapp.com/chat', { // Replace with your backend URL
+        fetch('http://localhost:3000/chat', { // Use local backend server for now
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
