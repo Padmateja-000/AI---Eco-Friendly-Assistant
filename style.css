@@ -1,63 +1,106 @@
+:root {
+    --primary: #2E8B57;
+    --secondary: #3CB371;
+    --accent: #FFD700;
+    --light: #F5F5F5;
+    --dark: #333;
+}
+
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f9f4;
-  color: #333;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 header {
-  background-color: #4CAF50;
-  color: white;
-  padding: 2rem;
-  text-align: center;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary);
 }
 
-.search-section {
-  text-align: center;
-  padding: 2rem;
+header h1 i {
+    margin-right: 10px;
 }
 
-input[type="text"] {
-  padding: 0.5rem;
-  width: 60%;
-  max-width: 400px;
-  margin-right: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.chat-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.chat-messages {
+    height: 400px;
+    padding: 15px;
+    overflow-y: auto;
 }
 
-button:hover {
-  background-color: #45a049;
+.message {
+    display: flex;
+    margin-bottom: 15px;
 }
 
-.results {
-  padding: 2rem;
-  text-align: center;
+.message.user {
+    justify-content: flex-end;
 }
 
-.result-card {
-  background: white;
-  padding: 1rem;
-  margin: 1rem auto;
-  max-width: 500px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  text-align: left;
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
 }
 
-footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
+.message.user .avatar {
+    background: var(--dark);
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    background: #E8F5E9;
+}
+
+.message.user .message-content {
+    background: var(--primary);
+    color: white;
+}
+
+.chat-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+.chat-input button {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
 }
