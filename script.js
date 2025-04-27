@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
 
-    const OPENAI_API_KEY = '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';
-
     // Mock eco-product database
     const ecoProducts = [
         { name: "Bamboo Toothbrush", brand: "EcoGood", price: 4.99, score: 9, reason: "100% biodegradable" },
@@ -24,22 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show typing indicator
         const thinkingMessage = addMessage("Thinking...", 'bot');
 
-        // Call OpenAI
-        fetch('https://api.openai.com/v1/chat/completions', {
+        // Call the backend server
+        fetch('https://your-backend-url.herokuapp.com/chat', { // Replace with your backend URL
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-4',
-                messages: [{ role: 'user', content: query }]
+                message: query
             })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.choices && data.choices.length > 0) {
-                thinkingMessage.querySelector('.message-content p').innerHTML = data.choices[0].message.content;
+            if (data.message) {
+                thinkingMessage.querySelector('.message-content p').innerHTML = data.message;
             } else {
                 fallbackResponse(query, thinkingMessage);
             }
@@ -58,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (matchedProducts.length > 0) {
             const productList = matchedProducts.map(p => 
-                `${p.name} by ${p.brand} ($${p.price}) - ${p.reason}`
+                `${p.name} by ${p.brand} ($${p.price}) - ${p.reason}` 
             ).join('<br>');
             messageElement.querySelector('.message-content p').innerHTML = `Eco-friendly options:<br>${productList}`;
         } else {
