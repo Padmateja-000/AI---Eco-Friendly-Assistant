@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
 
-    const OPENAI_API_KEY = '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';
+    const OPENAI_API_KEY = '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';
 
     // Mock eco-product database
     const ecoProducts = [
