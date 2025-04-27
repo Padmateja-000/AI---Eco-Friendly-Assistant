@@ -1,29 +1,80 @@
-function getRecommendation() {
-  const input = document.getElementById("productInput").value.trim();
-  const resultsDiv = document.getElementById("results");
+document.addEventListener('DOMContentLoaded', () => {
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
 
-  if (!input) {
-    resultsDiv.innerHTML = "<p>Please enter a product name.</p>";
-    return;
-  }
+    const OPENAI_API_KEY = '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';
 
-  // Simulate AI processing
-  const ecoScore = Math.floor(Math.random() * 100) + 1;
-  let message = "";
+    // Mock eco-product database
+    const ecoProducts = [
+        { name: "Bamboo Toothbrush", brand: "EcoGood", price: 4.99, score: 9, reason: "100% biodegradable" },
+        { name: "Organic Cotton Tote", brand: "GreenWear", price: 12.99, score: 8, reason: "Fair trade certified" }
+    ];
 
-  if (ecoScore > 80) {
-    message = "Excellent eco-friendly choice!";
-  } else if (ecoScore > 50) {
-    message = "Moderately sustainable. Consider better alternatives.";
-  } else {
-    message = "Not eco-friendly. Try a greener product.";
-  }
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => e.key === 'Enter' && sendMessage());
 
-  resultsDiv.innerHTML = `
-    <div class="result-card">
-      <h3>Results for "${input}"</h3>
-      <p><strong>Eco Score:</strong> ${ecoScore}/100</p>
-      <p>${message}</p>
-    </div>
-  `;
-}
+    function sendMessage() {
+        const query = userInput.value.trim();
+        if (!query) return;
+
+        addMessage(query, 'user');
+        userInput.value = '';
+
+        // Show typing indicator
+        const thinkingMessage = addMessage("Thinking...", 'bot');
+
+        // Call OpenAI
+        fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4',
+                messages: [{ role: 'user', content: query }]
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.choices && data.choices.length > 0) {
+                thinkingMessage.querySelector('.message-content p').innerHTML = data.choices[0].message.content;
+            } else {
+                fallbackResponse(query, thinkingMessage);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            fallbackResponse(query, thinkingMessage);
+        });
+    }
+
+    function fallbackResponse(query, messageElement) {
+        const matchedProducts = ecoProducts.filter(p => 
+            query.toLowerCase().includes(p.name.toLowerCase()) || 
+            query.toLowerCase().includes(p.brand.toLowerCase())
+        );
+
+        if (matchedProducts.length > 0) {
+            const productList = matchedProducts.map(p => 
+                `${p.name} by ${p.brand} ($${p.price}) - ${p.reason}`
+            ).join('<br>');
+            messageElement.querySelector('.message-content p').innerHTML = `Eco-friendly options:<br>${productList}`;
+        } else {
+            messageElement.querySelector('.message-content p').innerHTML = `Sorry, I couldn't find anything. Try asking about "vegan", "plastic-free", or "organic" products!`;
+        }
+    }
+
+    function addMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = `
+            <div class="avatar"><i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i></div>
+            <div class="message-content"><p>${text}</p></div>
+        `;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return msgDiv;
+    }
+});
